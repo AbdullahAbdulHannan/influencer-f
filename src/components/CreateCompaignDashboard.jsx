@@ -58,7 +58,11 @@ const CreateCompaignDashboard = () => {
           ) : (
             <Box sx={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 2 }}>
               {contentRewards.map(c => (
-                <Box key={c._id} sx={{ backgroundColor: "#1a1a1a", border: "1px solid #333", borderRadius: 2, p: 2 }}>
+                <Box key={c._id} sx={{ backgroundColor: "#1a1a1a", border: "1px solid #333", borderRadius: 2, overflow: "hidden" }}>
+                  {c.thumbnailUrl && (
+                    <img src={c.thumbnailUrl} alt={c.campaignName} style={{ width: "100%", height: 140, objectFit: "cover" }} />
+                  )}
+                  <Box sx={{ p: 2 }}>
                   <div style={{ fontWeight: 600 }}>{c.campaignName}</div>
                   <div style={{ color: "#999", fontSize: 12, marginTop: 4 }}>
                     {c.type} • {c.category}
@@ -66,6 +70,7 @@ const CreateCompaignDashboard = () => {
                   <div style={{ color: "#999", fontSize: 12, marginTop: 8 }}>
                     Budget: {c.currency || "USD"} {c.budget}
                   </div>
+                  </Box>
                 </Box>
               ))}
             </Box>

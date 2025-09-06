@@ -136,44 +136,7 @@ const Sidebar = () => {
         </List>
       </Box>
 
-      {/* Setup Guide */}
-      <Box sx={{ mt: "auto", p: 2 }}>
-        <Box
-          sx={{
-            backgroundColor: "#2d3748",
-            borderRadius: 2,
-            p: 2
-          }}
-        >
-          <Typography
-            variant="body2"
-            sx={{ color: "white", fontWeight: 600, mb: 1 }}
-          >
-            Setup guide
-          </Typography>
-          <Typography
-            variant="caption"
-            sx={{ color: "#999", mb: 2, display: "block" }}
-          >
-            Create product
-          </Typography>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
-            <Typography variant="body2" sx={{ color: "white" }}>
-              2/4 complete
-            </Typography>
-          </Box>
-          <LinearProgress
-            variant="determinate"
-            value={50}
-            sx={{
-              backgroundColor: "#4a5568",
-              "& .MuiLinearProgress-bar": {
-                backgroundColor: "#3b82f6"
-              }
-            }}
-          />
-        </Box>
-      </Box>
+     
 
       {/* Bottom Icon */}
       <Box

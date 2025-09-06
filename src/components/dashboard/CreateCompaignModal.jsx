@@ -31,25 +31,49 @@ import {
 
 const CreateCompaignModal = ({ open, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
-    campaignName: "Fanatics UGC - $3 per 1,000 views",
-    type: "UGC",
-    category: "Personal brand",
-    budget: 10000,
+    campaignName: "",
+    type: "",
+    category: "",
+    budget: "",
     currency: "USD",
-    rewardRate: 3,
-    views: 1000,
-    minimumPayout: 3,
-    maximumPayout: 100,
-    flatFeeBonus: 10,
-    platforms: ["instagram", "twitter", "youtube"],
-    availableContent: "https://drive.google.com/drive/folders/12345678",
-    contentRequirements: ["Must tag in the description"]
+    rewardRate: "",
+    views: "",
+    minimumPayout: "",
+    maximumPayout: "",
+    flatFeeBonus: "",
+    platforms: [],
+    availableContent: "",
+    contentRequirements: [],
+    thumbnailUrl: ""
   })
 
   const [newRequirement, setNewRequirement] = useState("")
+  const [thumbnailPreview, setThumbnailPreview] = useState("")
+
+  const handleThumbnailChange = (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      setThumbnailPreview(reader.result)
+      setFormData(prev => ({ ...prev, thumbnailUrl: reader.result }))
+    }
+    reader.readAsDataURL(file)
+  }
 
   const handleSubmit = () => {
-    onSubmit(formData)
+    const toNumber = v => (v === "" || v === null || v === undefined ? undefined : Number(v))
+    const payload = {
+      ...formData,
+      budget: toNumber(formData.budget),
+      rewardRate: toNumber(formData.rewardRate),
+      views: toNumber(formData.views),
+      minimumPayout: toNumber(formData.minimumPayout),
+      maximumPayout: toNumber(formData.maximumPayout),
+      flatFeeBonus: toNumber(formData.flatFeeBonus),
+      thumbnailUrl: thumbnailPreview || formData.thumbnailUrl
+    }
+    onSubmit(payload)
     onClose()
   }
 
@@ -144,6 +168,7 @@ const CreateCompaignModal = ({ open, onClose, onSubmit }) => {
                 onChange={e =>
                   setFormData({ ...formData, campaignName: e.target.value })
                 }
+                placeholder="e.g. Fanatics UGC - $3 per 1,000 views"
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     backgroundColor: "#2a2a2a",
@@ -182,6 +207,9 @@ const CreateCompaignModal = ({ open, onClose, onSubmit }) => {
                       }
                     }}
                   >
+                    <MenuItem value="" disabled>
+                      Select type
+                    </MenuItem>
                     <MenuItem value="UGC">UGC</MenuItem>
                     <MenuItem value="Sponsored">Sponsored</MenuItem>
                   </Select>
@@ -211,9 +239,11 @@ const CreateCompaignModal = ({ open, onClose, onSubmit }) => {
                       }
                     }}
                   >
+                    <MenuItem value="" disabled>
+                      Select category
+                    </MenuItem>
                     <MenuItem value="Personal brand">Personal brand</MenuItem>
                     <MenuItem value="Business">Business</MenuItem>
-                    
                   </Select>
                 </FormControl>
               </Grid>
@@ -229,7 +259,7 @@ const CreateCompaignModal = ({ open, onClose, onSubmit }) => {
                 type="number"
                 value={formData.budget}
                 onChange={e =>
-                  setFormData({ ...formData, budget: Number(e.target.value) })
+                  setFormData({ ...formData, budget: e.target.value })
                 }
                 InputProps={{
                   startAdornment: (
@@ -256,6 +286,7 @@ const CreateCompaignModal = ({ open, onClose, onSubmit }) => {
                     </InputAdornment>
                   )
                 }}
+                placeholder="$ 10,000"
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     backgroundColor: "#2a2a2a",
@@ -282,7 +313,7 @@ const CreateCompaignModal = ({ open, onClose, onSubmit }) => {
                     onChange={e =>
                       setFormData({
                         ...formData,
-                        rewardRate: Number(e.target.value)
+                        rewardRate: e.target.value
                       })
                     }
                     InputProps={{
@@ -290,6 +321,7 @@ const CreateCompaignModal = ({ open, onClose, onSubmit }) => {
                         <InputAdornment position="start">$</InputAdornment>
                       )
                     }}
+                    placeholder="3"
                     sx={{
                       "& .MuiOutlinedInput-root": {
                         backgroundColor: "#2a2a2a",
@@ -315,9 +347,10 @@ const CreateCompaignModal = ({ open, onClose, onSubmit }) => {
                     onChange={e =>
                       setFormData({
                         ...formData,
-                        views: Number(e.target.value)
+                        views: e.target.value
                       })
                     }
+                    placeholder="1000"
                     sx={{
                       "& .MuiOutlinedInput-root": {
                         backgroundColor: "#2a2a2a",
@@ -356,7 +389,7 @@ const CreateCompaignModal = ({ open, onClose, onSubmit }) => {
                   onChange={e =>
                     setFormData({
                       ...formData,
-                      minimumPayout: Number(e.target.value)
+                      minimumPayout: e.target.value
                     })
                   }
                   InputProps={{
@@ -364,6 +397,7 @@ const CreateCompaignModal = ({ open, onClose, onSubmit }) => {
                       <InputAdornment position="start">$</InputAdornment>
                     )
                   }}
+                  placeholder="3"
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       backgroundColor: "#2a2a2a",
@@ -396,7 +430,7 @@ const CreateCompaignModal = ({ open, onClose, onSubmit }) => {
                   onChange={e =>
                     setFormData({
                       ...formData,
-                      maximumPayout: Number(e.target.value)
+                      maximumPayout: e.target.value
                     })
                   }
                   InputProps={{
@@ -404,6 +438,7 @@ const CreateCompaignModal = ({ open, onClose, onSubmit }) => {
                       <InputAdornment position="start">$</InputAdornment>
                     )
                   }}
+                  placeholder="100"
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       backgroundColor: "#2a2a2a",
@@ -439,7 +474,7 @@ const CreateCompaignModal = ({ open, onClose, onSubmit }) => {
                 onChange={e =>
                   setFormData({
                     ...formData,
-                    flatFeeBonus: Number(e.target.value)
+                    flatFeeBonus: e.target.value
                   })
                 }
                 InputProps={{
@@ -447,6 +482,7 @@ const CreateCompaignModal = ({ open, onClose, onSubmit }) => {
                     <InputAdornment position="start">$</InputAdornment>
                   )
                 }}
+                placeholder="10"
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     backgroundColor: "#2a2a2a",
@@ -580,7 +616,7 @@ const CreateCompaignModal = ({ open, onClose, onSubmit }) => {
                   fullWidth
                   value={newRequirement}
                   onChange={e => setNewRequirement(e.target.value)}
-                  placeholder="Must tag  in the description"
+                  placeholder="e.g. Must tag in the description"
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       backgroundColor: "#2a2a2a",
@@ -603,7 +639,7 @@ const CreateCompaignModal = ({ open, onClose, onSubmit }) => {
                     }
                   }}
                 >
-                  {/* <AddIcon /> */}
+                  Add
                 </Button>
               </Box>
             </Box>
@@ -646,21 +682,23 @@ const CreateCompaignModal = ({ open, onClose, onSubmit }) => {
                   mb: 3
                 }}
               >
-                <UploadIcon sx={{ fontSize: 48, color: "#666", mb: 2 }} />
-                <Button
-                  variant="outlined"
-                  sx={{
-                    borderColor: "#444",
-                    color: "#999",
-                    textTransform: "none",
-                    "&:hover": {
-                      borderColor: "#666",
-                      backgroundColor: "rgba(255, 255, 255, 0.05)"
-                    }
-                  }}
-                >
-                  Upload thumbnail
-                </Button>
+                {thumbnailPreview ? (
+                  <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+                    <img src={thumbnailPreview} alt="thumbnail preview" style={{ width: "100%", maxWidth: 360, borderRadius: 8, objectFit: "cover" }} />
+                    <Button variant="outlined" component="label" sx={{ borderColor: "#444", color: "#999", textTransform: "none" }}>
+                      Change thumbnail
+                      <Input type="file" accept="image/*" onChange={handleThumbnailChange} sx={{ display: "none" }} />
+                    </Button>
+                  </Box>
+                ) : (
+                  <>
+                    <UploadIcon sx={{ fontSize: 48, color: "#666", mb: 2 }} />
+                    <Button variant="outlined" component="label" sx={{ borderColor: "#444", color: "#999", textTransform: "none", "&:hover": { borderColor: "#666", backgroundColor: "rgba(255, 255, 255, 0.05)" } }}>
+                      Upload thumbnail
+                      <Input type="file" accept="image/*" onChange={handleThumbnailChange} sx={{ display: "none" }} />
+                    </Button>
+                  </>
+                )}
               </Box>
 
               <Box sx={{ mb: 3 }}>
